@@ -2,12 +2,17 @@ import express from "express";
 import path from "path";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import dotenv from "dotenv";
+import cors from "cors"; // Importer le middleware CORS
 import { connectDB } from "./config/db";
 import userRoutes from "./routes/userRoutes";
+import steamRoutes from "./routes/steamRoutes"; // Importer les routes Steam
 
 dotenv.config();
 
 const app = express();
+
+// Utiliser le middleware CORS
+app.use(cors());
 
 // Connect to database
 connectDB();
@@ -17,6 +22,7 @@ app.use(express.json());
 
 // API routes
 app.use("/api/users", userRoutes);
+app.use("/api/steam", steamRoutes); // Utiliser les routes Steam
 
 // In development, proxy React's dev server
 if (process.env.NODE_ENV === "development") {
