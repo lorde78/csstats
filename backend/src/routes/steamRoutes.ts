@@ -36,4 +36,16 @@ router.get("/csgo", async (req: Request, res: Response) => {
 	}
 });
 
+router.get("/squad", async (req: Request, res: Response) => {
+	try {
+		const response = await axios.get(
+			`http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=393380&key=${apiKey}&steamid=${steamId}`
+		);
+		res.json(response.data.playerstats);
+	} catch (error) {
+		console.error("Error fetching Squad stats:", error);
+		res.status(500).json({ message: "Server error", error });
+	}
+});
+
 export default router;

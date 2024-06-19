@@ -10,6 +10,7 @@ import {
 	fetchSquadStats,
 	SquadStats as SquadStatsData,
 } from "./utils/fetchSquadStats";
+
 import "./App.css";
 import Profil from "./components/Profil";
 import CSGOStats from "./components/CSGOStats";
