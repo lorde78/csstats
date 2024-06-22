@@ -1,67 +1,44 @@
 import React, { useState, useEffect } from "react";
-import "./index.css";
-import { useQuery } from "react-query";
-import { fetchSteamProfile, SteamProfile } from "./utils/fetchSteamProfile";
-import {
-	fetchCSGOStats,
-	CSGOStats as CSGOStatsData,
-} from "./utils/fetchCSGOStats";
 import "./App.scss";
 import Profil from "./components/Profil";
+import Formulaire from "./components/Formulaire";
 
 const App: React.FC = () => {
-	const [profile, setProfile] = useState<SteamProfile | null>(null);
-	const [csgoStats, setCsgoStats] = useState<
-		{ name: string; value: number }[] | null
-	>(null);
-	const [view, setView] = useState<"ct" | "t">("ct");
+	const [userData, setUserData] = useState<any>(null);
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [showProfile, setShowProfile] = useState(false);
 
-	const {
-		data: profileData,
-		isLoading: isLoadingProfile,
-		refetch: refetchProfile,
-	} = useQuery<SteamProfile>("steamProfile", fetchSteamProfile, {
-		enabled: false,
-	});
-
-	const {
-		data: csgoData,
-		isLoading: isLoadingCSGO,
-		refetch: refetchCSGO,
-	} = useQuery<CSGOStatsData>("csgoStats", fetchCSGOStats, {
-		enabled: false,
-	});
+	const handleFormSubmit = (data: any) => {
+		setUserData(data);
+		setIsSubmitted(true);
+	};
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const profileResult = await refetchProfile();
-			if (profileResult.data) {
-				setProfile(profileResult.data);
-			}
-
-			const csgoResult = await refetchCSGO();
-			if (csgoResult.data) {
-				setCsgoStats(csgoResult.data.stats);
-			}
-		};
-
-		fetchData();
-	}, [refetchProfile, refetchCSGO]);
+		if (isSubmitted) {
+			const timer = setTimeout(() => {
+				setShowProfile(true);
+			}, 500); // Delay to match the slide-out animation duration
+			return () => clearTimeout(timer);
+		}
+	}, [isSubmitted]);
 
 	return (
-		<div className={`App ${view}`}>
-			<section>
-				{isLoadingProfile && <p>Loading profile...</p>}
-				{profile && csgoStats && (
+		<div className="container">
+			<div className={`landing-page ${isSubmitted ? "slide-left" : ""}`}>
+				<h1>Veux-tu te regarder dans le miroir ?</h1>
+				<Formulaire onSubmit={handleFormSubmit} />
+			</div>
+			{showProfile && (
+				<div className="profile-container show">
 					<Profil
-						pseudo={profile.personaname}
-						jeux={[]} // Replace with appropriate data
-						photoProfil={profile.avatarfull}
-						csgoStats={csgoStats}
-						view={view}
+						pseudo={userData.profile.personaname}
+						jeux={[]} // Remplacez par les données appropriées
+						photoProfil={userData.profile.avatarfull}
+						csgoStats={userData.stats}
+						view="ct" // Ou une logique pour choisir entre "ct" et "t"
 					/>
-				)}
-			</section>
+				</div>
+			)}
 		</div>
 	);
 };

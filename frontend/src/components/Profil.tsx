@@ -72,10 +72,14 @@ const Profil: React.FC<ProfilProps> = ({
 
 	return (
 		<div className={`profile ${view}`}>
-			<img src={photoProfil} alt={`${pseudo}'s profile`} />
-			<h1>{pseudo}</h1>
-			<h2>Liste des jeux</h2>
-			<ul>
+			<img
+				className="profile-item"
+				src={photoProfil}
+				alt={`${pseudo}'s profile`}
+			/>
+			<h1 className="profile-item">{pseudo}</h1>
+			<h2 className="profile-item">Liste des jeux</h2>
+			<ul className="profile-item">
 				{jeux.map((jeu, index) => (
 					<li key={index}>
 						{jeu.nom} - {jeu.heures} heures
@@ -85,10 +89,10 @@ const Profil: React.FC<ProfilProps> = ({
 
 			{view === "ct" && (
 				<>
-					<h2>CT Weapons</h2>
+					<h2 className="profile-item">CT Weapons</h2>
 					<div className="weapon-grid ct">
 						{weaponsCT.map((weapon, index) => (
-							<div key={index} className="weapon">
+							<div key={index} className="weapon profile-item">
 								<img src={weapon.image} alt={weapon.name} />
 								<h3>{weapon.name}</h3>
 								<p>Kills: {weapon.kills}</p>
@@ -100,10 +104,10 @@ const Profil: React.FC<ProfilProps> = ({
 
 			{view === "t" && (
 				<>
-					<h2>T Weapons</h2>
+					<h2 className="profile-item">T Weapons</h2>
 					<div className="weapon-grid t">
 						{weaponsT.map((weapon, index) => (
-							<div key={index} className="weapon">
+							<div key={index} className="weapon profile-item">
 								<img src={weapon.image} alt={weapon.name} />
 								<h3>{weapon.name}</h3>
 								<p>Kills: {weapon.kills}</p>

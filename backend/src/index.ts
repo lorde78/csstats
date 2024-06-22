@@ -18,7 +18,7 @@ connectDB();
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
-app.use("/api/steam", steamRoutes);
+app.use("/api/steam", steamRoutes); // Utilisation correcte de steamRoutes
 
 if (process.env.NODE_ENV === "development") {
 	app.use(

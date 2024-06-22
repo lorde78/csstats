@@ -4,46 +4,29 @@ import axios from "axios";
 const router = Router();
 
 const apiKey = process.env.STEAM_API_KEY;
-const steamId = process.env.STEAM_ID;
 
-if (!apiKey || !steamId) {
+if (!apiKey) {
 	throw new Error(
-		"Les variables d'environnement STEAM_API_KEY et STEAM_ID doivent être définies"
+		"La variable d'environnement STEAM_API_KEY doit être définie"
 	);
 }
 
-router.get("/profile", async (req: Request, res: Response) => {
+router.get("/:steamId", async (req: Request, res: Response) => {
+	const { steamId } = req.params;
+	console.log(`Fetching data for SteamID: ${steamId}`);
 	try {
-		const response = await axios.get(
+		const profileResponse = await axios.get(
 			`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${steamId}`
 		);
-		res.json(response.data.response.players[0]);
-	} catch (error) {
-		console.error("Error fetching Steam profile:", error);
-		res.status(500).json({ message: "Server error", error });
-	}
-});
-
-router.get("/csgo", async (req: Request, res: Response) => {
-	try {
-		const response = await axios.get(
+		const csgoResponse = await axios.get(
 			`http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${apiKey}&steamid=${steamId}`
 		);
-		res.json(response.data.playerstats);
+		res.json({
+			profile: profileResponse.data.response.players[0],
+			stats: csgoResponse.data.playerstats.stats,
+		});
 	} catch (error) {
-		console.error("Error fetching CS:GO stats:", error);
-		res.status(500).json({ message: "Server error", error });
-	}
-});
-
-router.get("/squad", async (req: Request, res: Response) => {
-	try {
-		const response = await axios.get(
-			`http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=393380&key=${apiKey}&steamid=${steamId}`
-		);
-		res.json(response.data.playerstats);
-	} catch (error) {
-		console.error("Error fetching Squad stats:", error);
+		console.error("Error fetching data from Steam API:", error);
 		res.status(500).json({ message: "Server error", error });
 	}
 });
