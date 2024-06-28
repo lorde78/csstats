@@ -25,7 +25,6 @@ const App: React.FC = () => {
 	return (
 		<div className="container">
 			<div className={`landing-page ${isSubmitted ? "slide-left" : ""}`}>
-				<h1>Veux-tu te regarder dans le miroir ?</h1>
 				<Formulaire onSubmit={handleFormSubmit} />
 			</div>
 			{showProfile && (
@@ -35,7 +34,6 @@ const App: React.FC = () => {
 						jeux={[]} // Remplacez par les données appropriées
 						photoProfil={userData.profile.avatarfull}
 						csgoStats={userData.stats}
-						view="ct" // Ou une logique pour choisir entre "ct" et "t"
 					/>
 				</div>
 			)}
