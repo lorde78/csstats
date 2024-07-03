@@ -1,0 +1,58 @@
+.game-card {
+	position: relative;
+	width: 250px; /* Ajustez selon vos besoins */
+	height: 350px; /* Ajustez selon vos besoins */
+	margin: 20px;
+	overflow: hidden;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	transition: transform 0.3s ease-in-out;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.game-card:hover {
+	transform: scale(1.05);
+}
+
+.game-card-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: height 0.3s ease-in-out;
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.game-card:hover .game-card-overlay {
+	height: 100%;
+}
+
+.game-card-hours {
+	color: #fff;
+	font-size: 1rem;
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out 0.3s;
+}
+
+.game-card:hover .game-card-hours {
+	opacity: 1;
+}
+
+.game-card-title {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.7);
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 1.2rem;
+}

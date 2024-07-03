@@ -21,10 +21,19 @@ router.get("/:steamId", async (req: Request, res: Response) => {
 		const csgoResponse = await axios.get(
 			`http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${apiKey}&steamid=${steamId}`
 		);
-		res.json({
+		const gamesResponse = await axios.get(
+			`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&format=json`
+		);
+
+		const responseData = {
 			profile: profileResponse.data.response.players[0],
 			stats: csgoResponse.data.playerstats.stats,
-		});
+			games: gamesResponse.data.response.games,
+		};
+
+		console.log("Fetched data:", responseData);
+
+		res.status(200).json(responseData);
 	} catch (error) {
 		console.error("Error fetching data from Steam API:", error);
 		res.status(500).json({ message: "Server error", error });
