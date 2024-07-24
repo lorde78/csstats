@@ -9,10 +9,9 @@ interface ProfilProps {
 	photoProfil: string;
 	csgoStats: { name: string; value: number }[];
 	nationalite: string;
-	onlineStatus: boolean;
-	derniereConnexion: string;
-	tempsJeu24h: number;
-	tempsJeuSemaine: number;
+	personastate: number;
+	lastlogoff: number;
+	tempsJeu2Semaine: number;
 }
 
 const Profil: React.FC<ProfilProps> = ({
@@ -21,12 +20,50 @@ const Profil: React.FC<ProfilProps> = ({
 	photoProfil,
 	csgoStats,
 	nationalite,
-	onlineStatus,
-	derniereConnexion,
-	tempsJeu24h,
-	tempsJeuSemaine,
+	personastate,
+	lastlogoff,
+	tempsJeu2Semaine,
 }) => {
 	const csgoGame = jeux.find((jeu) => jeu.appid === 730);
+
+	const derniereConnexion = new Date(lastlogoff * 1000).toLocaleString();
+
+	const getStatusText = (personastate: number) => {
+		switch (personastate) {
+			case 0:
+				return `Offline (dernière connexion : ${derniereConnexion})`;
+			case 1:
+				return "Online";
+			case 2:
+				return "Busy";
+			case 3:
+				return "Away";
+			case 4:
+				return "Snooze";
+			case 5:
+				return "Looking to trade";
+			case 6:
+				return "Looking to play";
+			default:
+				return "Unknown";
+		}
+	};
+
+	const getStatusClass = (personastate: number) => {
+		switch (personastate) {
+			case 0:
+				return "offline";
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+				return "online";
+			default:
+				return "";
+		}
+	};
 
 	return (
 		<div className="profile">
@@ -46,17 +83,15 @@ const Profil: React.FC<ProfilProps> = ({
 						/>
 						<h1>{pseudo}</h1>
 					</div>
-					<div className={`status ${onlineStatus ? "online" : "offline"}`}>
+					<div className={`status ${getStatusClass(personastate)}`}>
 						<span className="status-circle"></span>
-						{onlineStatus ? "Online" : `Offline depuis ${derniereConnexion}`}
+						{getStatusText(personastate)}
 					</div>
 					<div className="game-stats">
 						<p>Nombre de jeux : {jeux.length}</p>
 						<p>
-							Temps joué :{" "}
-							{tempsJeu24h > 0
-								? `${tempsJeu24h} heures au cours des dernières 24 heures`
-								: `${tempsJeuSemaine} heures au cours de la dernière semaine`}
+							Temps joué : {tempsJeu2Semaine} heures au cours des deux dernières
+							semaines
 						</p>
 					</div>
 				</div>

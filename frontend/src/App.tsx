@@ -63,7 +63,13 @@ const Profile: React.FC = () => {
 		return <div>Loading...</div>;
 	}
 
-	if (!userData || !userData.profile || !userData.games || !userData.stats) {
+	if (
+		!userData ||
+		!userData.profile ||
+		!userData.games ||
+		!userData.stats ||
+		!userData.recentlyPlayed
+	) {
 		return <div>Error loading profile</div>;
 	}
 
@@ -78,14 +84,14 @@ const Profile: React.FC = () => {
 		appid: game.appid,
 	}));
 	const csgoStatsData = userData.stats;
-	const onlineStatus = profileData.personastate === 1;
-	const derniereConnexion = new Date(
-		profileData.lastlogoff * 1000
-	).toLocaleString();
 
-	// Ces valeurs doivent être calculées en fonction des données utilisateur
-	const tempsJeu24h = 0; // Remplacer par le calcul réel
-	const tempsJeuSemaine = 0; // Remplacer par le calcul réel
+	// Calcul du temps de jeu des deux dernières semaines
+	const tempsJeu2Semaine = Math.round(
+		userData.recentlyPlayed.reduce(
+			(total: number, game: any) => total + game.playtime_2weeks,
+			0
+		) / 60
+	);
 
 	return (
 		<div className="profile-container show">
@@ -95,10 +101,9 @@ const Profile: React.FC = () => {
 				photoProfil={profileData.avatarfull}
 				csgoStats={csgoStatsData}
 				nationalite={profileData.loccountrycode}
-				onlineStatus={onlineStatus}
-				derniereConnexion={derniereConnexion}
-				tempsJeu24h={tempsJeu24h}
-				tempsJeuSemaine={tempsJeuSemaine}
+				personastate={profileData.personastate}
+				lastlogoff={profileData.lastlogoff}
+				tempsJeu2Semaine={tempsJeu2Semaine}
 			/>
 		</div>
 	);
